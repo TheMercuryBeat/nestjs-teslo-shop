@@ -72,3 +72,9 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+# Load initial data
+
+```bash
+curl http://localhost:3000/api/seed
+```
