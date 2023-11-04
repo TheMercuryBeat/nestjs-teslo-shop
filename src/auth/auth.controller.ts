@@ -1,32 +1,41 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Auth, GetUser, RawHeaders } from './decorators';
+import { RoleProtected } from './decorators/role-protected.decorator';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { User } from './entities/user.entity';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
-import { RoleProtected } from './decorators/role-protected.decorator';
 import { ValidRoles } from './interfaces';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post('register')
+  @ApiOkResponse({ description: 'User was created' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
   register(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
   }
 
   @Post('login')
+  @ApiOkResponse({ description: 'User was logged' })
+  @ApiBadRequestResponse({ description: 'Bad Request' })
+  @ApiUnauthorizedResponse({ description: 'User not authorized' })
   login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
   }
 
   @Get('check')
   @Auth()
-  checkAuthStatus(@GetUser() user: User){
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Auth information' })
+  checkAuthStatus(@GetUser() user: User) {
     return this.authService.checkAuthStatus(user);
-  }  
+  }
 
   @Get('private')
   @UseGuards(AuthGuard())

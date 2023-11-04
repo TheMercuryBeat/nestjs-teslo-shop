@@ -1,11 +1,14 @@
 import { BadRequestException, Controller, FileTypeValidator, Get, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseFilePipeBuilder, Post, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
-import { FilesService } from './files.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { fileFilter, fileNamer } from './helpers';
-import { diskStorage } from 'multer';
-import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
+import { diskStorage } from 'multer';
+import { FilesService } from './files.service';
+import { fileFilter, fileNamer } from './helpers';
+import { FileUploadDto } from './dto/file.dto';
 
+@ApiTags('Files')
 @Controller('files')
 export class FilesController {
 
@@ -14,6 +17,7 @@ export class FilesController {
     private readonly configService: ConfigService) { }
 
   @Get('product/:imageName')
+  @ApiParam({ name: 'imageName', description: 'Image name' })
   findProductImage(
     @Res() res: Response,
     @Param('imageName') imageName: string) {
@@ -23,6 +27,8 @@ export class FilesController {
   }
 
   @Post('product')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ description: 'Image of product', type: FileUploadDto })
   @UseInterceptors(FileInterceptor('file', {
     fileFilter: fileFilter,
     storage: diskStorage({
@@ -36,6 +42,6 @@ export class FilesController {
 
     const secureUrl = `${this.configService.get('HOST_API')}/files/product/${file.filename}`;
     return { secureUrl };
-    
+
   }
 }
