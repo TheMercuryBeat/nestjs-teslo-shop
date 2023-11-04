@@ -9,7 +9,7 @@ import { User } from './entities/user.entity';
 import { UserRoleGuard } from './guards/user-role/user-role.guard';
 import { ValidRoles } from './interfaces';
 
-@ApiTags('Auth')
+@ApiTags('Auth2')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }

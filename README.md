@@ -34,6 +34,9 @@ DATABASE_PORT=<your_database_port>
 DATABASE_NAME=<your_database_name>
 DATABASE_USERNAME=<your_database_username>
 DATABASE_PASSWORD=<your_database_password>
+PORT=<port>
+HOST_API=<host_api>
+JWT_SECRET=<jwt_secret>
 ```
 
 # Start up database
