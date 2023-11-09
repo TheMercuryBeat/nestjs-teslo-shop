@@ -29,6 +29,7 @@
 Create .env file, and add the following properties:
 
 ```
+STAGE=dev
 DATABASE_HOST=<your_database_host>
 DATABASE_PORT=<your_database_port>
 DATABASE_NAME=<your_database_name>
